@@ -1,0 +1,41 @@
+name: VibeGuard Static Guards
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone VibeGuard
+        run: git clone https://github.com/majiayu000/vibeguard.git ~/vibeguard
+
+      - name: Run Code Slop Guard
+        run: |
+          cd ~/trading_bot
+          bash ~/vibeguard/guards/universal/check_code_slop.sh . || true
+        continue-on-error: true
+
+      - name: Run Test Integrity Guard
+        run: |
+          cd ~/trading_bot
+          bash ~/vibeguard/guards/universal/check_test_integrity.sh . || true
+        continue-on-error: true
+
+      - name: Python Quality Guard
+        run: |
+          cd ~/trading_bot
+          if [[ -d ~/vibeguard/guards/python ]]; then
+            for g in ~/vibeguard/guards/python/check_*.sh; do
+              [[ -f "$g" ]] || continue
+              echo "=== Running $(basename $g) ==="
+              bash "$g" . || true
+            done
+          fi
+        continue-on-error: true

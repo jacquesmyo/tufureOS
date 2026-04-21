@@ -1,0 +1,27 @@
+{
+  "env": "production",
+  "log_dir": "logs",
+  "cycle_interval_seconds": 1800,
+  "max_recovery": 3,
+  "required_env": [
+    "GROQ_API_KEY",
+    "POLYMARKET_API_KEY"
+  ],
+  "apis": [
+    {
+      "name": "groq",
+      "url": "https://api.groq.com/openai/v1/models",
+      "headers": {}
+    },
+    {
+      "name": "polymarket",
+      "url": "https://clob.polymarket.com/health",
+      "headers": {}
+    }
+  ],
+  "min_disk_gb": 0.5,
+  "check_branch": true,
+  "check_cron": true,
+  "base_branch": "main",
+  "cron_pattern": "trading_bot"
+}

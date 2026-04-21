@@ -1,0 +1,28 @@
+name: Open Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Open Code Review
+        uses: raye-deng/open-code-review@main
+        with:
+          sla: L2
+          threshold: 75
+          scan-mode: diff
+          fail-on-low-score: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
