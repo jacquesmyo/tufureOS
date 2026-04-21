@@ -1,0 +1,17 @@
+[Unit]
+Description=TufureOS Trading Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/trading_bot
+Environment=PYTHONPATH=%h/trading_bot
+Environment=LIVE_MODE=0
+ExecStart=%h/.local/bin/python3 %h/trading_bot/paper_trade.py
+StandardOutput=append:%h/trading_bot/logs/systemd.log
+StandardError=append:%h/trading_bot/logs/systemd.log
+Restart=on-failure
+RestartSec=300
+
+[Install]
+WantedBy=default.target
