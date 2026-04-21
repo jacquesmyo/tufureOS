@@ -1,5 +1,5 @@
 """
-TufureOS Trading Bot — Real Market Runner
+TufureOS Trading Bot - Real Market Runner
 Uses live data, MCTS strategy, event-first logging.
 """
 import os
