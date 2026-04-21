@@ -19,6 +19,7 @@ from strategies.mean_reversion import MeanReversionStrategy
 from strategies.mcts_strategy import MCTSStrategy
 from src.events import EventEmitter, EventKind
 from src.doctor import Doctor
+from src.alerts import AlertManager
 
 
 class PaperTrader:
@@ -34,6 +35,7 @@ class PaperTrader:
         self.mcts = MCTSStrategy(self.emitter, bankroll=bankroll)
         self.mean_rev = MeanReversionStrategy(period=20, std_mult=2.0)
         self.prices = []  # Price history for Binance BTC
+        self.alerts = AlertManager()
 
     def health_check(self) -> bool:
         """Run /doctor before trading."""
@@ -161,6 +163,12 @@ class PaperTrader:
 
         # Simulate fill immediately
         self.emitter.emit(EventKind.ORDER_FILLED, order_id=order_id, price=edge["price"])
+        self.alerts.trade_alert(
+            action=edge["action"],
+            market=edge["market"],
+            price=edge["price"],
+            size=size,
+        )
 
         # Log to dedicated paper trade file
         trade_record = {
